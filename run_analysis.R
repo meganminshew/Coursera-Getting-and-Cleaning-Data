@@ -57,30 +57,18 @@ run_analysis <- function () {
 	a <- read.table("UCI HAR Dataset\\activity_labels.txt")
 	names(a) <- c("activitykey", "activity")
 	wd <- merge(x = wd, y = a, by = "activitykey", all = TRUE)
-
 ## 5. Create ds with average by variable paritioned by activity and volunteer
-
-	out <- data.frame(t(rep(NA, 4)))
-	
-	act <- as.character(unique(wd$activity))
-	vol <- unique(wd$volunteer)
-	var <- names(wd[2:67])
-	for (ac in act) {
-		for (vo in vol) {
-			t <- subset(wd, wd$activity == ac & wd$volunteer == vo)
-			for (i in 2:67) {
-				v <- names(wd[i])
-				m <- mean(t[,i])
-				out <- rbind(out, c(vo, ac, v, m))
-				#print(c(vo, ac, v, m))
-			}
-		}
-	}
-	out <- out[-1,]
+	#get the variable names
+	vars = names(td[2:67])
+	#unpivot the data
+	wdMelt <- melt(wd, id=c("volunteer","activity"), measure.vars=vars)
+	#build the data frame with the averages	
+	out <- aggregate(value ~ volunteer + activity + variable, data = tdMelt, FUN="mean")
+	#rename columns
 	names(out) <- c("Volunteer", "Activity", "Variable", "Average")
-	out$Average <- as.numeric(out$Average)
-
+# and render to txt file	
 write.table(out, "HAR_tidydata.txt")
+
 #out
 }
 
