@@ -1,8 +1,8 @@
 Coursera-Getting-and-Cleaning-Data
 ==================================
 
-## Course Project: 
-# Human Activity Smartphone Recognition Review
+# Course Project: 
+## Human Activity Smartphone Recognition Review
 
 
 * README.md - summarizes the repository contents
